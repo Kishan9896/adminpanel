@@ -20,6 +20,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import MedicationIcon from '@mui/icons-material/Medication';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import { NavLink } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -88,7 +89,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function Layout() {
+export default function Layout({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -101,8 +102,8 @@ export default function Layout() {
   };
 
   const LayoutwithDetail = [
-    {label:'Medicines', to:'/Medicines', icon:'MedicationIcon'}
-    {label:'Patient', to:'/Patient', icon:'PersonAddAltIcon'}
+    {label:'Medicines', to:'/medicines', icon:<MedicationIcon/>},
+    {label:'Patient', to:'/patient', icon:<PersonAddAltIcon/>}
   ]
 
   return (
@@ -135,8 +136,8 @@ export default function Layout() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Medicines', 'Patient'].map((text, index) => (
-            <ListItem to='/Medicines' key={text} disablePadding sx={{ display: 'block' }}>
+          {LayoutwithDetail.map((text, index) => (
+            <ListItem component={NavLink} exact to={text.to} key={text.label} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -151,14 +152,19 @@ export default function Layout() {
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {text.icon}
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={text.label} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       </Drawer>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <DrawerHeader />
+        
+        {children}
+      </Box>
     </Box>
   );
 }

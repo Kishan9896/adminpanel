@@ -8,8 +8,8 @@ function App() {
   return (
     <Layout>
       <Switch>
-        <Route path="/Medicines" exact component={Medicines}/>
-        <Route path="/Patient" exact component={Patient} />
+        <Route path="/medicines" exact component={Medicines}/>
+        <Route path="/patient" exact component={Patient} />
       </Switch>
     </Layout>    
   );

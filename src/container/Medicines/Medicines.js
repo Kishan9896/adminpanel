@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Form, Formik, useFormik } from "formik";
 import * as yup from "yup";
+import { DataGrid } from "@mui/x-data-grid";
 
 function Medicines(props) {
   const [open, setOpen] = React.useState(false);
+  const [data, setData] = useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -23,9 +24,20 @@ function Medicines(props) {
   let schema = yup.object().shape({
     name: yup.string().required("Please Enter Medicine Name."),
     price: yup.number().required("Please Enter Medicine Price."),
-    quntity: yup.string().required("Please Enter Medicine Quntity."),
-    expiry: yup.string().required("Please Enter Medicine Expiry."),
+    quntity: yup.number().required("Please Enter Medicine Quntity."),
+    expiry: yup.number().required("Please Enter Medicine Expiry."),
   });
+
+  const inserthandle = (values) => {
+    const localData = JSON.parse(localStorage.getItem("Medicines"));
+    if (localData === null) {
+      localStorage.setItem("Medicines", JSON.stringify([values]));
+    } else {
+      localData.push(values);
+      localStorage.setItem("Medicines", JSON.stringify(localData));
+    }
+    handleClose();
+  };
 
   const formikOrg = useFormik({
     initialValues: {
@@ -34,10 +46,37 @@ function Medicines(props) {
       quntity: "",
       expiry: "",
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    validationSchema: schema,
+    onSubmit: (values, action) => {
+      inserthandle(values);
+      action.resetForm();
     },
   });
+
+  const columns = [
+    { field: "name", headerName: "Name", width: 130 },
+    { field: "price", headerName: "Price", width: 130 },
+    { field: "quntity", headerName: "Quntity", width: 130 },
+    { field: "expiry", headerName: "Expiry", width: 130 },
+  ];
+
+  const local = () => {
+    const Datahandle = JSON.parse(localStorage.getItem("Medicines"));
+
+    const id = Math.floor(Math.random()*1000);
+
+    const dataIn = {
+      id: id,
+      ...values
+    }
+
+    setData(Datahandle);
+  }
+
+  useEffect (() => {
+    local();
+  }, [])
+  
 
   const { handleSubmit, handleChange, handleBlur, errors, touched } = formikOrg;
 
@@ -48,63 +87,73 @@ function Medicines(props) {
         <Button variant="outlined" onClick={handleClickOpen}>
           Medicines
         </Button>
-        <Formik values={formikOrg}>
-          <Form onSubmit={handleSubmit}>
-            <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Add Medicine</DialogTitle>
+        <div style={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={data}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            checkboxSelection
+          />
+        </div>
+
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Add Medicine</DialogTitle>
+          <Formik values={formikOrg}>
+            <Form onSubmit={handleSubmit}>
               <DialogContent>
                 <TextField
                   margin="dense"
-                  id="name"
+                  name="name"
                   label="Medicine Name"
-                  type="name"
+                  type="text"
                   fullWidth
                   variant="standard"
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.name && touched.errors ? errors.name:''}
+                <p>{errors.name && touched.name ? errors.name : ""}</p>
                 <TextField
                   margin="dense"
-                  id="price"
+                  name="price"
                   label="Medicine Price"
-                  type="price"
+                  type="number"
                   fullWidth
                   variant="standard"
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.price && touched.errors ? errors.price:''}
+                <p>{errors.price && touched.price ? errors.price : ""}</p>
                 <TextField
                   margin="dense"
-                  id="quntity"
+                  name="quntity"
                   label="Medicine Quntity"
-                  type="quntity"
+                  type="number"
                   fullWidth
                   variant="standard"
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.quntity && touched.errors ? errors.quntity:''}
+                <p>{errors.quntity && touched.quntity ? errors.quntity : ""}</p>
                 <TextField
                   margin="dense"
-                  id="expiry"
+                  name="expiry"
                   label="Medicine Expiry"
-                  type="expiry"
+                  type="number"
                   fullWidth
                   variant="standard"
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.expiry && touched.errors ? errors.expiry:''}
-                <DialogActions>
-                  <Button onClick={handleClose}>Cancel</Button>
-                  <Button type="submit">Subscribe</Button>
-                </DialogActions>
+                <p>{errors.expiry && touched.expiry ? errors.expiry : ""}</p>
               </DialogContent>
-            </Dialog>
-          </Form>
-        </Formik>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button type="submit">submit</Button>
+              </DialogActions>
+            </Form>
+          </Formik>
+        </Dialog>
       </div>
     </div>
   );

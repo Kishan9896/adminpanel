@@ -10,8 +10,9 @@ import * as yup from "yup";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import Slide from '@mui/material/Slide';
-import DialogContentText from '@mui/material/DialogContentText';
+import Slide from "@mui/material/Slide";
+import DialogContentText from "@mui/material/DialogContentText";
+import EditIcon from "@mui/icons-material/Edit";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -29,8 +30,8 @@ function Medicines(props) {
 
   const handleClose = () => {
     setOpen(false);
+    formikOrg.resetForm();
   };
-  
 
   let schema = yup.object().shape({
     name: yup.string().required("Please Enter Medicine Name."),
@@ -80,9 +81,9 @@ function Medicines(props) {
 
     setData(deleteHandel);
 
-    localStorage.setItem("Medicines", JSON.stringify(deleteHandel))
+    localStorage.setItem("Medicines", JSON.stringify(deleteHandel));
     setDeleteAlert(false);
-  }
+  };
 
   const handleDeleteAlertOpen = (params) => {
     setDeleteAlert(true);
@@ -92,6 +93,11 @@ function Medicines(props) {
   const handleDeleteAlertClose = () => {
     setDeleteAlert(false);
   };
+
+  const handleEdit = (params) => {
+    setOpen(true);
+    formikOrg.setValues(params.row);
+  }
 
   const columns = [
     { field: "name", headerName: "Name", width: 130 },
@@ -103,9 +109,20 @@ function Medicines(props) {
       headerName: "Action",
       width: 130,
       renderCell: (params) => (
-        <IconButton aria-label="delete" onClick={()=>handleDeleteAlertOpen(params)}>
-          <DeleteIcon />
-        </IconButton>
+        <>
+          <IconButton
+            aria-label="edit"
+            onClick={() => handleEdit(params)}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleDeleteAlertOpen(params)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
       ),
     },
   ];
@@ -122,7 +139,7 @@ function Medicines(props) {
     local();
   }, []);
 
-  const { handleSubmit, handleChange, handleBlur, errors, touched } = formikOrg;
+  const { handleSubmit, handleChange, handleBlur, errors, touched, values } = formikOrg;
 
   return (
     <div>
@@ -147,6 +164,7 @@ function Medicines(props) {
             <Form onSubmit={handleSubmit}>
               <DialogContent>
                 <TextField
+                  value={values.name}
                   margin="dense"
                   name="name"
                   label="Medicine Name"
@@ -158,6 +176,7 @@ function Medicines(props) {
                 />
                 <p>{errors.name && touched.name ? errors.name : ""}</p>
                 <TextField
+                  value={values.price}
                   margin="dense"
                   name="price"
                   label="Medicine Price"
@@ -169,6 +188,7 @@ function Medicines(props) {
                 />
                 <p>{errors.price && touched.price ? errors.price : ""}</p>
                 <TextField
+                  value={values.quntity}
                   margin="dense"
                   name="quntity"
                   label="Medicine Quntity"
@@ -180,6 +200,7 @@ function Medicines(props) {
                 />
                 <p>{errors.quntity && touched.quntity ? errors.quntity : ""}</p>
                 <TextField
+                  value={values.expiry}
                   margin="dense"
                   name="expiry"
                   label="Medicine Expiry"
@@ -206,16 +227,14 @@ function Medicines(props) {
         onClose={handleDeleteAlertClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
+            Are you want to sure Delete?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteAlertClose}>Disagree</Button>
-          <Button onClick={Delete}>Agree</Button>
+          <Button onClick={handleDeleteAlertClose}>No</Button>
+          <Button onClick={Delete}>Yes</Button>
         </DialogActions>
       </Dialog>
     </div>

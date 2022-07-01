@@ -23,6 +23,7 @@ function Medicines(props) {
   const [data, setData] = useState([]);
   const [deleteAlert, setDeleteAlert] = useState(false);
   const [rowData, setRowdata] = useState(null);
+  const [edit, setEdit] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -57,7 +58,26 @@ function Medicines(props) {
       localStorage.setItem("Medicines", JSON.stringify(localData));
     }
     handleClose();
+    local();
   };
+
+
+  const dataEdit = (values) => {
+    const dataEditupdate = JSON.parse(localStorage.getItem("Medicines"));
+
+    const uData = dataEditupdate.map((P) => {
+      if (P.id === values.id) {
+        return values;
+      } else {
+        return P;
+      }
+    })
+    localStorage.setItem("Medicines", JSON.stringify(uData));
+
+    handleClose()
+    local()
+    setEdit(false)
+  }
 
   const formikOrg = useFormik({
     initialValues: {
@@ -68,9 +88,12 @@ function Medicines(props) {
     },
     validationSchema: schema,
     onSubmit: (values, action) => {
-      inserthandle(values);
+      if (edit) {
+        dataEdit(values);
+      } else {
+        inserthandle(values);
+      }
       action.resetForm();
-      local();
     },
   });
 
@@ -96,6 +119,8 @@ function Medicines(props) {
 
   const handleEdit = (params) => {
     setOpen(true);
+
+    setEdit(true);
     formikOrg.setValues(params.row);
   }
 
@@ -214,7 +239,12 @@ function Medicines(props) {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
-                <Button type="submit">submit</Button>
+                {
+                  edit ?
+                  <Button type="submit">Update</Button>
+                  :
+                  <Button type="submit">submit</Button>
+                }
               </DialogActions>
             </Form>
           </Formik>

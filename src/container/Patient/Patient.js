@@ -24,6 +24,7 @@ function Patient(props) {
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [rowData, setRowdata] = useState(null);
     const [edit, setEdit] = useState(false);
+    const [search, setSearch] = useState([]);
 
     const handleClickOpen = () => {
         setPopen(true);
@@ -160,6 +161,20 @@ function Patient(props) {
         }
     };
 
+    const handleSearch = (value) => {
+        const localSearch = JSON.parse(localStorage.getItem("Patient"));
+
+        const filterData = localSearch.filter((a) => (
+            a.name.toLowerCase().includes(value) ||
+            a.number.toString().includes(value) ||
+            a.condition.toLowerCase().includes(value) ||
+            a.insurance.toLowerCase().includes(value)
+        ))
+        setSearch(filterData);
+    }
+
+    const Sdata = search.length > 0 ? search : data;
+
     useEffect(() => {
         local();
     }, []);
@@ -173,9 +188,18 @@ function Patient(props) {
                 <Button variant="outlined" onClick={handleClickOpen}>
                     Patient
                 </Button>
+                <TextField
+                    margin="dense"
+                    name="name"
+                    label="Patient Search"
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    onChange={(e) => handleSearch(e.target.value)}
+                />
                 <div style={{ height: 400, width: "100%" }}>
                     <DataGrid
-                        rows={data}
+                        rows={Sdata}
                         columns={columns}
                         pageSize={5}
                         rowsPerPageOptions={[5]}

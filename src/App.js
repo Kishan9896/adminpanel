@@ -4,10 +4,13 @@ import Medicines from "./container/Medicines/Medicines";
 import Patient from "./container/Patient/Patient";
 import { Provider } from "react-redux";
 import Counter from "./container/Counter";
+import configureStore from "./container/redux/reducer/store";
 
 function App() {
+  const store = configureStore()
+
   return (
-    <Provider store= {store}>
+    <Provider store={store}>
       <Layout>
         <Switch>
           <Route path="/medicines" exact component={Medicines} />

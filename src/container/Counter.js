@@ -2,24 +2,24 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { increment, decrement } from "./redux/action/counterAction"
 
-function counter(props) {
-    const dispatch = useDispatch ()
+function Counter(props) {
+    const dispatch = useDispatch()
     const c = useSelector(state => state.counter.counter)
     const incrementHandle = () => {
         dispatch(increment())
     }
 
     const decrementHandle = () => {
-        dispatch(decrement);
+        dispatch(decrement());
     }
 
     return (
         <div>
-            <button onClick={increment}>+</button>
+            <button onClick={incrementHandle}>+</button>
             {c}
-            <button onClick={decrement}>-</button>
+            <button onClick={decrementHandle}>-</button>
         </div>
     );
 }
 
-export default counter;
+export default Counter;

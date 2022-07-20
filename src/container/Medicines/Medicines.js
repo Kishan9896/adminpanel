@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import Slide from "@mui/material/Slide";
 import DialogContentText from "@mui/material/DialogContentText";
 import EditIcon from "@mui/icons-material/Edit";
+import { useSelector } from "react-redux";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -178,9 +179,11 @@ function Medicines(props) {
   const { handleSubmit, handleChange, handleBlur, errors, touched, values } =
     formikOrg;
 
+    const c = useSelector(state => state.counter)
+
   return (
     <div>
-      <h1>Medicines</h1>
+      <h1>Medicines: {c.counter}</h1>
       <div>
         <Button variant="outlined" onClick={handleClickOpen}>
           Medicines

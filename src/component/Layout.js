@@ -103,7 +103,8 @@ export default function Layout({ children }) {
 
   const LayoutwithDetail = [
     {label:'Medicines', to:'/medicines', icon:<MedicationIcon/>},
-    {label:'Patient', to:'/patient', icon:<PersonAddAltIcon/>}
+    {label:'Patient', to:'/patient', icon:<PersonAddAltIcon/>},
+    {label:'Counter', to:'/counter', icon:<PersonAddAltIcon/>},
   ]
 
   return (

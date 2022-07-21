@@ -1,0 +1,44 @@
+{
+  "Medicines": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "id": 2,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "id": 3,
+      "title": "React",
+      "author": "Kishan"
+    },
+    {
+      "id": 5,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "id": 6,
+      "title": "Demo",
+      "author": "Kishan"
+    },
+    {
+      "id": 4,
+      "title": "React",
+      "author": "Kishan9896"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

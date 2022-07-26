@@ -13,7 +13,8 @@ import IconButton from "@mui/material/IconButton";
 import Slide from "@mui/material/Slide";
 import DialogContentText from "@mui/material/DialogContentText";
 import EditIcon from "@mui/icons-material/Edit";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Medicine } from "../redux/action/Medicines.action";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -26,6 +27,8 @@ function Medicines(props) {
   const [rowData, setRowdata] = useState(null);
   const [edit, setEdit] = useState(false);
   const [search, setSearch] = useState([]);
+  
+  const dispatch = useDispatch ()
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -171,9 +174,12 @@ function Medicines(props) {
   }
 
   const Sdata = search.length > 0 ? search : data;
+  const Medicines = useSelector (state => state.Medicines);
+  console.log(Medicines);
 
   useEffect(() => {
-    local();
+    // local();
+    dispatch(Medicine())
   }, []);
 
   const { handleSubmit, handleChange, handleBlur, errors, touched, values } =
@@ -199,7 +205,7 @@ function Medicines(props) {
         />
         <div style={{ height: 400, width: "100%" }}>
           <DataGrid
-            rows={Sdata}
+            rows={Medicines.Medicines}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[5]}

@@ -2,33 +2,38 @@
   "Medicines": [
     {
       "id": 1,
-      "title": "json-server",
-      "author": "typicode"
+      "name": "ABC",
+      "price": "150",
+      "quntity": "10",
+      "expiry": "2022"
     },
     {
       "id": 2,
-      "title": "json-server",
-      "author": "typicode"
+      "name": "PQR",
+      "price": "120",
+      "quntity": "100",
+      "expiry": "2023"
     },
     {
       "id": 3,
-      "title": "React",
-      "author": "Kishan"
-    },
-    {
-      "id": 5,
-      "title": "json-server",
-      "author": "typicode"
-    },
-    {
-      "id": 6,
-      "title": "Demo",
-      "author": "Kishan"
+      "name": "XYZ",
+      "price": "110",
+      "quntity": "99",
+      "expiry": "2022"
     },
     {
       "id": 4,
-      "title": "React",
-      "author": "Kishan9896"
+      "name": "EFG",
+      "price": "190",
+      "quntity": "5",
+      "expiry": "2022"
+    },
+    {
+      "id": 5,
+      "name": "TQR",
+      "price": "50",
+      "quntity": "100",
+      "expiry": "2022"
     }
   ],
   "comments": [

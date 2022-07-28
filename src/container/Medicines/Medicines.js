@@ -189,6 +189,14 @@ function Medicines(props) {
 
   return (
     <div>
+    {
+      Medicines.isLoding ? 
+      <p>Loading...</p> 
+      :
+      Medicines.error !== "" ?
+      <p>{Medicines.error}</p>
+      :
+      <div>
       <h1>Medicines: {c.counter}</h1>
       <div>
         <Button variant="outlined" onClick={handleClickOpen}>
@@ -297,6 +305,9 @@ function Medicines(props) {
         </DialogActions>
       </Dialog>
     </div>
+    }
+    </div>
+    
   );
 }
 

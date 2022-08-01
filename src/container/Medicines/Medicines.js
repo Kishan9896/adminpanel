@@ -14,7 +14,7 @@ import Slide from "@mui/material/Slide";
 import DialogContentText from "@mui/material/DialogContentText";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch, useSelector } from "react-redux";
-import { Medicine } from "../redux/action/Medicines.action";
+import { AddMedicine, Medicine } from "../redux/action/Medicines.action";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -56,12 +56,14 @@ function Medicines(props) {
       ...values,
     };
 
-    if (localData === null) {
-      localStorage.setItem("Medicines", JSON.stringify([dataIn]));
-    } else {
-      localData.push(dataIn);
-      localStorage.setItem("Medicines", JSON.stringify(localData));
-    }
+    dispatch(AddMedicine(dataIn))
+
+    // if (localData === null) {
+    //   localStorage.setItem("Medicines", JSON.stringify([dataIn]));
+    // } else {
+    //   localData.push(dataIn);
+    //   localStorage.setItem("Medicines", JSON.stringify(localData));
+    // }
     handleClose();
     local();
   };

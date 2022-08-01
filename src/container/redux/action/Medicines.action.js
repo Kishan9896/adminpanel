@@ -1,5 +1,6 @@
+import { addMethod } from "yup";
 import { Base_URL } from "../../../Shared/Base_URL";
-import { GET_MEDICINES, LOADING_MEDICINES, ERROR_MEDICINES } from "../reducer/actionType";
+import { GET_MEDICINES, LOADING_MEDICINES, ERROR_MEDICINES, ADD_MEDICINES } from "../reducer/actionType";
 
 export const Medicine = () => (dispatch) => {
 
@@ -26,10 +27,44 @@ export const Medicine = () => (dispatch) => {
             .catch((error) => dispatch(MedicineError(error.message)))
         }, 2000)
     } catch (error) {
-        console.log(error);
+      dispatch(MedicineError(error.message));
     }
     
     
+}
+
+export const AddMedicine = (dataIn) => (dispatch) => {
+  console.log(dataIn)
+  try {
+    setTimeout(() => {
+      fetch(Base_URL +'Medicines', {
+      method : 'POST',
+      body : JSON.stringify(dataIn),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+      })
+      .then(response => {
+          if (response.ok) {
+            return response;
+          } else {
+            var error = new Error('Something Went Wrong' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+          }
+        },
+          error => {
+            var errmess = new Error(error.message);
+            throw errmess;
+          })
+        .then(response => response.json())
+      .then((dataIn) => dispatch({ type:  ADD_MEDICINES, payload: dataIn}))
+      .catch((error) => dispatch(MedicineError(error.message)))
+  }, 2000)
+
+  } catch (error) {
+    dispatch(MedicineError(error.message));
+  }
 }
 
 export const MedicineLoading = () => (dispatch) => {

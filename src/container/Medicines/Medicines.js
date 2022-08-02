@@ -14,7 +14,8 @@ import Slide from "@mui/material/Slide";
 import DialogContentText from "@mui/material/DialogContentText";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch, useSelector } from "react-redux";
-import { AddMedicine, Medicine } from "../redux/action/Medicines.action";
+import { AddMedicine, DeleteMedicine, Medicine, UpdateMedicine } from "../redux/action/Medicines.action";
+import { idID } from "@mui/material/locale";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -69,16 +70,18 @@ function Medicines(props) {
   };
 
   const dataEdit = (values) => {
-    const dataEditupdate = JSON.parse(localStorage.getItem("Medicines"));
+    // const dataEditupdate = JSON.parse(localStorage.getItem("Medicines"));
 
-    const uData = dataEditupdate.map((P) => {
-      if (P.id === values.id) {
-        return values;
-      } else {
-        return P;
-      }
-    });
-    localStorage.setItem("Medicines", JSON.stringify(uData));
+    // const uData = dataEditupdate.map((P) => {
+    //   if (P.id === values.id) {
+    //     return values;
+    //   } else {
+    //     return P;
+    //   }
+    // });
+    // localStorage.setItem("Medicines", JSON.stringify(uData));
+
+    dispatch(UpdateMedicine(values))
 
     handleClose();
     local();
@@ -104,13 +107,15 @@ function Medicines(props) {
   });
 
   const Delete = () => {
-    const DeleteData = JSON.parse(localStorage.getItem("Medicines"));
+    // const DeleteData = JSON.parse(localStorage.getItem("Medicines"));
 
-    const deleteHandel = DeleteData.filter((p) => p.id !== rowData.id);
+    // const deleteHandel = DeleteData.filter((p) => p.id !== rowData.id);
 
-    setData(deleteHandel);
+    // setData(deleteHandel);
 
-    localStorage.setItem("Medicines", JSON.stringify(deleteHandel));
+    // localStorage.setItem("Medicines", JSON.stringify(deleteHandel));
+
+    dispatch(DeleteMedicine(rowData.id))
     setDeleteAlert(false);
   };
 

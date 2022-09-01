@@ -1,5 +1,5 @@
 import { addMethod } from "yup";
-import { GetMedicines } from "../../../common/apis/Medicine.Api";
+import { GetMedicines, PostMedicines } from "../../../common/apis/Medicine.Api";
 import { Base_URL } from "../../../Shared/Base_URL";
 import {
   GET_MEDICINES,
@@ -9,17 +9,21 @@ import {
   DELETE_MEDICINES,
   UPDATE_MEDICINES,
 } from "../reducer/actionType";
+import { collection, addDoc } from "firebase/firestore";
+import { async } from "@firebase/util";
+import { db } from "../../../firebase";
 
 export const Medicine = () => (dispatch) => {
-  dispatch(MedicineLoading());
 
   try {
+    dispatch(MedicineLoading());
     setTimeout(() => {
       GetMedicines()
         .then((data) => dispatch({ type: GET_MEDICINES, payload: data.data }))
         .catch((error) => dispatch(MedicineError(error.message)));
-      // fetch(Base_URL +'Medicines')
-      // .then(response => {
+      console.log(GetMedicines());
+      // fetch(Base_URL + 'Medicines')
+      //   .then(response => {
       //     if (response.ok) {
       //       return response;
       //     } else {
@@ -33,53 +37,64 @@ export const Medicine = () => (dispatch) => {
       //       throw errmess;
       //     })
       //   .then(response => response.json())
-      // .then((data) => dispatch({ type:  GET_MEDICINES, payload: data}))
-      // .catch((error) => dispatch(MedicineError(error.message)))
+      //   .then((data) => dispatch({ type: GET_MEDICINES, payload: data }))
+      //   .catch((error) => dispatch(MedicineError(error.message)))
     }, 2000);
   } catch (error) {
     dispatch(MedicineError(error.message));
   }
 };
 
-export const AddMedicine = (dataIn) => (dispatch) => {
+export const AddMedicine = (dataIn) => async (dispatch) => {
   console.log(dataIn);
   try {
-    setTimeout(() => {
-      fetch(Base_URL + "Medicines", {
-        method: "POST",
-        body: JSON.stringify(dataIn),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then(
-          (response) => {
-            if (response.ok) {
-              return response;
-            } else {
-              var error = new Error(
-                "Something Went Wrong" +
-                  response.status +
-                  ": " +
-                  response.statusText
-              );
-              error.response = response;
-              throw error;
-            }
-          },
-          (error) => {
-            var errmess = new Error(error.message);
-            throw errmess;
-          }
-        )
-        .then((response) => response.json())
-        .then((dataIn) => dispatch({ type: ADD_MEDICINES, payload: dataIn }))
-        .catch((error) => dispatch(MedicineError(error.message)));
-    }, 2000);
+    const docRef = await addDoc(collection(db, "users"), dataIn);
+    console.log("Document written with ID: ", docRef.id);
+    dispatch({ type: ADD_MEDICINES, payload: dataIn.id })
+
   } catch (error) {
     dispatch(MedicineError(error.message));
   }
 };
+
+// setTimeout(() => {
+//   PostMedicines()
+//     .then((dataIn) =>
+//       dispatch({ type: ADD_MEDICINES, payload: dataIn.data })
+//     )
+//     .catch((error) => dispatch(MedicineError(error.message)));
+//   // fetch(Base_URL + "Medicines", {
+//   //   method: "POST",
+//   //   body: JSON.stringify(dataIn),
+//   //   headers: {
+//   //     "Content-Type": "application/json",
+//   //   },
+//   // })
+//   //   .then(
+//   //     (response) => {
+//   //       if (response.ok) {
+//   //         return response;
+//   //       } else {
+//   //         var error = new Error(
+//   //           "Something Went Wrong" +
+//   //             response.status +
+//   //             ": " +
+//   //             response.statusText
+//   //         );
+//   //         error.response = response;
+//   //         throw error;
+//   //       }
+//   //     },
+//   //     (error) => {
+//   //       var errmess = new Error(error.message);
+//   //       throw errmess;
+//   //     }
+//   //   )
+//   //   .then((response) => response.json())
+//   //   .then((dataIn) => dispatch({ type: ADD_MEDICINES, payload: dataIn }))
+//   //   .catch((error) => dispatch(MedicineError(error.message)));
+// }, 2000);
+
 
 export const DeleteMedicine = (id) => (dispatch) => {
   console.log(id);
@@ -95,9 +110,9 @@ export const DeleteMedicine = (id) => (dispatch) => {
             } else {
               var error = new Error(
                 "Something Went Wrong" +
-                  response.status +
-                  ": " +
-                  response.statusText
+                response.status +
+                ": " +
+                response.statusText
               );
               error.response = response;
               throw error;
@@ -135,9 +150,9 @@ export const UpdateMedicine = (data) => (dispatch) => {
             } else {
               var error = new Error(
                 "Something Went Wrong" +
-                  response.status +
-                  ": " +
-                  response.statusText
+                response.status +
+                ": " +
+                response.statusText
               );
               error.response = response;
               throw error;

@@ -1,17 +1,10 @@
 import { deletRequest, GetReqestMedicines, postRequest, putRequest } from "./Request";
+import { URL } from "./URL";
 
-export const GetMedicines = () => {
-  return GetReqestMedicines("Medicines");
-};
+export const GetMedicines = () => GetReqestMedicines(URL.medicine);
 
-export const addMedicines = (values) => {
-  return postRequest('Medicines/', values)
-};
+export const addMedicines = (values) => postRequest(URL.medicine, values);
 
-export const deletMedicines = (id) =>{
-  return deletRequest('medicine/', id)
-};
+export const deletMedicines = (id) => deletRequest(`${URL.medicine}/`, id);
 
-export const editMedicine = (values) =>{
-  return putRequest('medicine/', values)
-};
+export const editMedicine = (values) => putRequest(`${URL.medicine}/`, values);

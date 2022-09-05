@@ -29,7 +29,8 @@ function Medicines(props) {
   const [edit, setEdit] = useState(false);
   const [search, setSearch] = useState([]);
   
-  const dispatch = useDispatch ()
+  const dispatch = useDispatch ();
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,28 +49,28 @@ function Medicines(props) {
   });
 
   const inserthandle = (values) => {
-    const localData = JSON.parse(localStorage.getItem("Medicines"));
+    // const localData = JSON.parse(localStorage.getItem("Medicines"));
 
     const id = Math.floor(Math.random() * 1000);
 
     const dataIn = {
-      id: id,
+      id,
       ...values,
     };
 
-    dispatch(AddMedicine(dataIn))
-
+    
     // if (localData === null) {
-    //   localStorage.setItem("Medicines", JSON.stringify([dataIn]));
-    // } else {
-    //   localData.push(dataIn);
-    //   localStorage.setItem("Medicines", JSON.stringify(localData));
-    // }
+      //   localStorage.setItem("Medicines", JSON.stringify([dataIn]));
+      // } else {
+        //   localData.push(dataIn);
+        //   localStorage.setItem("Medicines", JSON.stringify(localData));
+        // }
+    dispatch(AddMedicine(dataIn))
     handleClose();
     local();
   };
 
-  const dataEdit = (values) => {
+  const dataEdit = (values, action) => {
     // const dataEditupdate = JSON.parse(localStorage.getItem("Medicines"));
 
     // const uData = dataEditupdate.map((P) => {
@@ -81,8 +82,8 @@ function Medicines(props) {
     // });
     // localStorage.setItem("Medicines", JSON.stringify(uData));
 
-    dispatch(UpdateMedicine(values))
-
+    dispatch(UpdateMedicine(values));
+    action.resetForm();
     handleClose();
     local();
     setEdit(false);
@@ -96,14 +97,7 @@ function Medicines(props) {
       expiry: "",
     },
     validationSchema: schema,
-    onSubmit: (values, action) => {
-      if (edit) {
-        dataEdit(values);
-      } else {
-        inserthandle(values);
-      }
-      action.resetForm();
-    },
+    onSubmit: edit ? dataEdit : inserthandle,
   });
 
   const Delete = () => {
@@ -187,7 +181,7 @@ function Medicines(props) {
   useEffect(() => {
     // local();
     dispatch(Medicine())
-  }, []);
+  }, [dispatch]);
 
   const { handleSubmit, handleChange, handleBlur, errors, touched, values } =
     formikOrg;

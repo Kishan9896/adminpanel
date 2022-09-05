@@ -18,9 +18,7 @@ export const MedicinesReducer = (state = intival, action) => {
     case actionType.ADD_MEDICINES:
       return {
         ...state,
-        Medicines: state.Medicines.concat(action.payload),
-        isLoding: false,
-        error: "",
+        Medicines: state.Medicines.concat(action.payload)
       };
     case actionType.UPDATE_MEDICINES:
         return {
@@ -32,8 +30,6 @@ export const MedicinesReducer = (state = intival, action) => {
                 return p
             }
           }),
-          isLoding: false,
-          error: "",
         };
     case actionType.DELETE_MEDICINES:
         return {
@@ -48,7 +44,6 @@ export const MedicinesReducer = (state = intival, action) => {
       return {
         ...state,
         isLoding: false,
-        Medicines: [],
         error: action.payload,
       };
     default:

@@ -61,8 +61,13 @@ export const AddMedicine = (dataIn) => async (dispatch) => {
   console.log(dataIn);
   try {
     const docRef = await addDoc(collection(db, "users"), dataIn);
+<<<<<<< HEAD
     // console.log("Document written with ID: ", docRef.id);
     dispatch({ type: ADD_MEDICINES, payload: { id: docRef.id, ...dataIn } })
+=======
+    console.log("Document written with ID: ", docRef.id);
+    dispatch({ type: ADD_MEDICINES, payload: {id: dataIn.id, ...dataIn} });
+>>>>>>> 26aff305af4d995516935827f694f40984488a0c
 
   } catch (error) {
     dispatch(MedicineError(error.message));

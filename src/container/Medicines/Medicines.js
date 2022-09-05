@@ -53,7 +53,7 @@ function Medicines(props) {
   });
 
   const inserthandle = (values) => {
-    const localData = JSON.parse(localStorage.getItem("Medicines"));
+    // const localData = JSON.parse(localStorage.getItem("Medicines"));
 
     const id = Math.floor(Math.random() * 1000);
 

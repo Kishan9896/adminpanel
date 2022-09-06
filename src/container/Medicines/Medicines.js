@@ -50,6 +50,7 @@ function Medicines(props) {
     price: yup.number().required("Please Enter Medicine Price."),
     quntity: yup.number().required("Please Enter Medicine Quntity."),
     expiry: yup.number().required("Please Enter Medicine Expiry."),
+    Prof_img: yup.mixed().required("please select profile picture.")
   });
 
   const inserthandle = (values) => {
@@ -99,6 +100,7 @@ function Medicines(props) {
       price: "",
       quntity: "",
       expiry: "",
+      Prof_img: ""
     },
     validationSchema: schema,
     onSubmit: (values, action) => {
@@ -195,7 +197,7 @@ function Medicines(props) {
     dispatch(Medicine());
   }, []);
 
-  const { handleSubmit, handleChange, handleBlur, errors, touched, values } =
+  const { handleSubmit, handleChange, handleBlur, errors, touched, values, setFieldValue } =
     formikOrg;
 
   const c = useSelector((state) => state.counter);
@@ -287,6 +289,14 @@ function Medicines(props) {
                     />
                     <p>
                       {errors.expiry && touched.expiry ? errors.expiry : ""}
+                    </p>
+                    <input
+                      name="Prof_img"
+                      type="file"
+                      onChange={(e) => setFieldValue("Prof_img", e.target.files[0])}
+                    />
+                    <p>
+                      {errors.Prof_img && touched.Prof_img ? errors.Prof_img : ""}
                     </p>
                   </DialogContent>
                   <DialogActions>

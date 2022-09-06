@@ -11,8 +11,9 @@ import {
 } from "../reducer/actionType";
 import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
-import { db } from "../../../firebase";
+import { db, storage } from "../../../firebase";
 import { ActionTypes } from "@mui/base";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 
 // Firebase Read Code
@@ -60,9 +61,19 @@ export const Medicine = () => async (dispatch) => {
 export const AddMedicine = (dataIn) => async (dispatch) => {
   console.log(dataIn);
   try {
-    const docRef = await addDoc(collection(db, "users"), dataIn);
-    // console.log("Document written with ID: ", docRef.id);
-    dispatch({ type: ADD_MEDICINES, payload: { id: docRef.id, ...dataIn } })
+    const spaceRef = ref(storage, 'images/' + dataIn.Prof_img.name);
+    uploadBytes(spaceRef, dataIn.Prof_img).then((snapshot) => {
+      getDownloadURL(snapshot.ref)
+        .then(async (url) => {
+          console.log(url);
+          const docRef = await addDoc(collection(db, "users"), { ...dataIn, Prof_img: url });
+          dispatch({ type: ADD_MEDICINES, payload: { ...dataIn, Prof_img: url, id: docRef.id, } })
+        })
+      console.log('Uploaded a blob or file!');
+    });
+
+
+
 
   } catch (error) {
     dispatch(MedicineError(error.message));

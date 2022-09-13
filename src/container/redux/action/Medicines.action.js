@@ -13,7 +13,7 @@ import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "firebase
 import { async } from "@firebase/util";
 import { db, storage } from "../../../firebase";
 import { ActionTypes } from "@mui/base";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 
 // Firebase Read Code
@@ -61,12 +61,13 @@ export const Medicine = () => async (dispatch) => {
 export const AddMedicine = (dataIn) => async (dispatch) => {
   console.log(dataIn);
   try {
-    const spaceRef = ref(storage, 'images/' + dataIn.Prof_img.name);
+    const randomNum = Math.floor(Math.random() * 1000000);
+    const spaceRef = ref(storage, 'images/' + randomNum);
     uploadBytes(spaceRef, dataIn.Prof_img).then((snapshot) => {
       getDownloadURL(snapshot.ref)
         .then(async (url) => {
           console.log(url);
-          const docRef = await addDoc(collection(db, "users"), { ...dataIn, Prof_img: url });
+          const docRef = await addDoc(collection(db, "users"), { ...dataIn, Prof_img: url, File_Number: randomNum });
           dispatch({ type: ADD_MEDICINES, payload: { ...dataIn, Prof_img: url, id: docRef.id, } })
         })
       console.log('Uploaded a blob or file!');
@@ -119,12 +120,18 @@ export const AddMedicine = (dataIn) => async (dispatch) => {
 // }, 2000);
 
 
-export const DeleteMedicine = (id) => async (dispatch) => {
-  console.log(id);
+export const DeleteMedicine = (dataIn) => async (dispatch) => {
+  console.log(dataIn);
   try {
+    const MedicineRef = ref(storage, 'images/' + dataIn.File_Number);
+    deleteObject(MedicineRef).then(async () => {
+      await deleteDoc(doc(db, "users", dataIn.id));
+      dispatch({ type: DELETE_MEDICINES, payload: dataIn.id })
+    }).catch((error) => {
+      dispatch(MedicineError(error.message));
+    });
 
-    await deleteDoc(doc(db, "users", id));
-    dispatch({ type: DELETE_MEDICINES, payload: id })
+
     // setTimeout(() => {
     //   fetch(Base_URL + "Medicines/" + id, {
     //     method: "DELETE",

@@ -122,7 +122,7 @@ function Medicines(props) {
 
     // localStorage.setItem("Medicines", JSON.stringify(deleteHandel));
 
-    dispatch(DeleteMedicine(rowData.id));
+    dispatch(DeleteMedicine(rowData));
     setDeleteAlert(false);
   };
 
@@ -148,6 +148,14 @@ function Medicines(props) {
     { field: "quntity", headerName: "Quntity", width: 130 },
     { field: "expiry", headerName: "Expiry", width: 130 },
     {
+      field: "Prof_img",
+      headerName: "Profile Image",
+      width: 130,
+      renderCell: (params) => (
+        <img src={params.row.Prof_img} width={50} height={50} />
+      )
+    },
+    {
       field: "Action",
       headerName: "Action",
       width: 130,
@@ -158,7 +166,7 @@ function Medicines(props) {
           </IconButton>
           <IconButton
             aria-label="delete"
-            onClick={() => handleDeleteAlertOpen(params)}
+            onClick={() => handleDeleteAlertOpen(params.row)}
           >
             <DeleteIcon />
           </IconButton>

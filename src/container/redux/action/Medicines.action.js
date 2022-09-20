@@ -168,17 +168,28 @@ export const DeleteMedicine = (dataIn) => async (dispatch) => {
 export const UpdateMedicine = (data) => async (dispatch) => {
   console.log(data);
   try {
-    const washingtonRef = doc(db, "users", data.id);
 
-    // Set the "capital" field of the city 'DC'
-    await updateDoc(washingtonRef, {
-      name: data.name,
-      price: data.price,
-      quntity: data.quntity,
-      expiry: data.expiry
-    });
+    if (typeof data.Prof_img === "object") {
+      await deleteDoc(doc(db, "users", data.Prof_img));
+      const randomNum = Math.floor(Math.random() * 1000000).toString();
+      const spaceRef = ref(storage, 'images/' + randomNum);
+      uploadBytes(spaceRef, data.Prof_img).then((snapshot) => {
+        getDownloadURL(snapshot.ref)
+          .then(async (url) => {
+            console.log(url);
+            const washingtonRef = doc(db, "users", data.id);
+            await updateDoc(washingtonRef, { ...data, Prof_img: url, randomNum });
+            dispatch({ type: UPDATE_MEDICINES, payload: { ...data, Prof_img: url, randomNum } })
+          })
+      });
+    } else {
+      const washingtonRef = doc(db, "users", data.id);
+      await updateDoc(washingtonRef, data);
+      dispatch({ type: UPDATE_MEDICINES, payload: data })
+    }
 
-    dispatch({ type: UPDATE_MEDICINES, payload: data })
+
+
 
     // setTimeout(() => {
     //   fetch(Base_URL + "Medicines/" + data.id, {

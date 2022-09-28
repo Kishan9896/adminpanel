@@ -184,20 +184,21 @@ function Medicines(props) {
   };
 
   const handleSearch = (value) => {
-    const localSearch = JSON.parse(localStorage.getItem("Medicines"));
+    // const localSearch = JSON.parse(localStorage.getItem("Medicines"));
 
-    const filterData = localSearch.filter(
+    const filterData = Medicines.Medicines.filter(
       (a) =>
         a.name.toLowerCase().includes(value) ||
         a.price.toString().includes(value) ||
         a.quntity.toString().includes(value) ||
         a.expiry.toString().includes(value)
     );
+    console.log(filterData);
     setSearch(filterData);
   };
 
-  const Sdata = search.length > 0 ? search : data;
   const Medicines = useSelector((state) => state.Medicines);
+  const Sdata = search.length > 0 ? search : Medicines.Medicines;
   console.log(Medicines);
 
   useEffect(() => {
@@ -233,7 +234,7 @@ function Medicines(props) {
             />
             <div style={{ height: 400, width: "100%" }}>
               <DataGrid
-                rows={Medicines.Medicines}
+                rows={Sdata}
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
